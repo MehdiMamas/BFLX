@@ -1,0 +1,34 @@
+{
+  "manifest_version": 3,
+  "name": "BFLX",
+  "version": "1.0",
+  "description": "Autofill your goverment documents with BFLX",
+  "permissions": [],
+  "background": {
+    "service_worker": "./js/bg.js"
+  },
+  "action": {
+    "default_title": "BFLX",
+    "default_icon": {
+      "16": "assets/icon.png",
+      "48": "assets/icon.png",
+      "128": "assets/icon.png"
+    }
+  },
+  "icons": {
+    "16": "assets/icon.png",
+    "48": "assets/icon.png",
+    "128": "assets/icon.png"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "*://*.pay.gov/*/form/*"
+      ],
+      "js": [
+        "./js/helper.js",
+        "./js/cs.js"
+      ]
+    }
+  ]
+}
