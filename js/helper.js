@@ -6,126 +6,188 @@ function startFormPage() {
   }
 }
 
-function entryFormPage(formId) {
-  // Sample JSON Data
-  const formData = {
-    PII_OrgName1: "Example Nonprofit Organization",
-    PII_CareOfName: "John Doe",
-    PII_Address: "123 Example Street",
-    PII_City: "New York",
-    PII_State: "NY",
-    PII_Zip: "10001",
-    PII_Country: "United States",
-    sensEIN_1: "12-3456799",
-    PII_AccountingPeriodEnd: 12,
-    PII_PrimaryContactName: "Sarah Miller",
-    PII_PrimaryContactPhone: "555-987-6543",
-    PII_PrimaryContactFax: "555-111-2222",
-    PII_OrgURL: "example.org",
-    RemittanceNetAmount: "$600.00",
-    Trustees: [
-      {
-        FirstName: "Emily",
-        LastName: "Carter",
-        Title: "President",
-        StreetAddr: "456 Trustee Lane",
-        City: "Los Angeles",
-        State: "CA",
-        ZIP: "90001",
-      },
-      {
-        FirstName: "David",
-        LastName: "White",
-        Title: "Treasurer",
-        StreetAddr: "789 Finance Road",
-        City: "Chicago",
-        State: "IL",
-        ZIP: "60601",
-      },
-    ],
-  };
-
+async function entryFormPage1(formData) {
   // Function to autofill form fields using the name attribute
-  function autofillForm(data) {
-    Object.keys(data).forEach((key) => {
-      if (key !== "Trustees") {
-        let inputElement = document.querySelector(`[name="data[${key}]"]`);
+  function fillField(key, value) {
+    return new Promise((resolve, reject) => {
+      let setTimeoutForErrorHandling;
+      let inputElement = document.querySelector(`[name*="data[${key}]"]`);
+      try {
+        eventDispatch(); // Trigger change event
+      } catch (error) {
+        const observer = new MutationObserver((mutationsList, observer) => {
+          for (let mutation of mutationsList) {
+            if (
+              mutation.type === "childList" ||
+              mutation.type === "attributes"
+            ) {
+              try {
+                eventDispatch();
+                observer.disconnect();
+              } catch (error) {}
+              break;
+            }
+          }
+        });
+
+        observer.observe(document.body, {
+          childList: true,
+          subtree: true,
+          attributes: true,
+        });
+        // trigger in case it was missed by the observer
+        try {
+          eventDispatch();
+        } catch (error) {}
+        setTimeoutForErrorHandling = setTimeout(() => {
+          try {
+            eventDispatch();
+          } catch (error) {
+            observer.disconnect();
+            console.log("Couldn't find input element for key: " + key);
+            // Reject the promise after a timeout
+            resolve(false);
+          }
+        }, 5000); // Stop observing after 5 seconds
+      }
+
+      function eventDispatch() {
+        inputElement = document.querySelector(`[name*="data[${key}]"]`);
         if (inputElement) {
-          inputElement.value = data[key];
-          inputElement.dispatchEvent(new Event("input")); // Trigger change event
-          inputElement.dispatchEvent(new Event("change")); // Trigger change event
+          clearTimeout(setTimeoutForErrorHandling);
+          if (
+            inputElement.tagName == "INPUT" &&
+            inputElement.parentElement.classList.contains("input-group")
+            // if inputElement has more than just the input
+          ) {
+            let inputGroupElement = inputElement.parentElement;
+            let inputToChange =
+              inputGroupElement.querySelector("input:not([name])");
+            if (inputToChange) {
+              inputToChange.value = value;
+              inputToChange.dispatchEvent(new Event("input")); // Trigger change event
+              inputToChange.dispatchEvent(new Event("change"));
+            } else {
+              throw new Error(
+                "Input element 'input group' not found for key: " + key
+              );
+            }
+          } else if (
+            inputElement == document.querySelector(`[name*="data[${key}]"][`)
+            // if the input element is a radio button or checkbox
+          ) {
+            let inputToClick = document.querySelector(
+              `[name*="data[${key}]"][id*="${value}"]`
+            );
+            if (inputToClick) {
+              inputToClick.click();
+            } else {
+              throw new Error(
+                "Input element 'value' not found for key: " + key
+              );
+            }
+          } else {
+            // if the input element is a text field or select
+            inputElement.value = value;
+            inputElement.dispatchEvent(new Event("input")); // Trigger change event
+            inputElement.dispatchEvent(new Event("change"));
+            if (
+              inputElement.value != value &&
+              inputElement.tagName === "SELECT"
+              // if the input element is a select and the options are not available yet
+            ) {
+              const optionExists = Array.from(inputElement.options).filter(
+                (e) => e.value != ""
+              );
+
+              if (optionExists.length == 0) {
+                const observerOptions = new MutationObserver(
+                  (mutationsList, observer) => {
+                    for (let mutation of mutationsList) {
+                      if (
+                        mutation.type === "childList" ||
+                        mutation.type === "attributes"
+                      ) {
+                        const optionExists = Array.from(
+                          inputElement.options
+                        ).filter((e) => e.value != "");
+                        if (optionExists.length > 0) {
+                          eventDispatch();
+                          observer.disconnect();
+                          break;
+                        }
+                      }
+                    }
+                  }
+                );
+
+                observerOptions.observe(inputElement, {
+                  childList: true,
+                  subtree: true,
+                  attributes: true,
+                });
+
+                setTimeout(() => {
+                  observerOptions.disconnect();
+                }, 5000); // Stop observing after 5 seconds
+              } else {
+                inputElement.value = value;
+                inputElement.dispatchEvent(new Event("input"));
+                inputElement.dispatchEvent(new Event("change"));
+              }
+            }
+          }
+          resolve(true);
+        } else {
+          throw new Error("Input element not found for key: " + key);
+        }
+      }
+    });
+  }
+  const data = formData[0];
+  let itemsAutoFilled = [];
+  for (let i = 0; i < data.length; i++) {
+    const item = data[i];
+    const [key, value] = [item.key, item.value];
+    itemsAutoFilled.push(await fillField(key, value));
+  }
+  if (
+    itemsAutoFilled.length == data.length &&
+    itemsAutoFilled.indexOf(false) == -1
+  ) {
+    let continueButton = document.querySelector("[name='data[next1]']");
+    if (continueButton) {
+      continueButton.click();
+    }
+    function checkPageChanged(observer) {
+      let pageSpan = document.querySelector(
+        ".usa-step-indicator__current-step"
+      );
+      if (pageSpan) {
+        let pageNumber = Number(pageSpan.textContent.trim());
+        if (pageNumber === 2) {
+          observer.disconnect();
+          entryFormPage2(data);
+        }
+      }
+    }
+    const observer = new MutationObserver((mutationsList, observer) => {
+      for (let mutation of mutationsList) {
+        if (mutation.type === "childList" || mutation.type === "attributes") {
+          checkPageChanged(observer);
         }
       }
     });
 
-    // Set the number of trustees dynamically
-    let trusteeSelect = document.querySelector(`[name="data[OfficerCount]"]`);
-    if (trusteeSelect) {
-      trusteeSelect.value = data.Trustees.length;
-      trusteeSelect.dispatchEvent(new Event("input")); // Trigger change event
-      trusteeSelect.dispatchEvent(new Event("change")); // Trigger change event
-    }
-  }
-
-  // Function to autofill trustee fields dynamically
-  function autofillTrustees(trustees) {
-    trustees.forEach((trustee, index) => {
-      let trusteeIndex = index + 1; // Trustee numbers start from 1
-
-      let firstName = document.querySelector(
-        `[name="data[PII_OfcrDirTrust${trusteeIndex}FirstName]"]`
-      );
-      let lastName = document.querySelector(
-        `[name="data[PII_OfcrDirTrust${trusteeIndex}LastName]"]`
-      );
-      let title = document.querySelector(
-        `[name="data[PII_OfcrDirTrust${trusteeIndex}Title]"]`
-      );
-      let address = document.querySelector(
-        `[name="data[PII_OfcrDirTrust${trusteeIndex}StreetAddr]"]`
-      );
-      let city = document.querySelector(
-        `[name="data[PII_OfcrDirTrust${trusteeIndex}City]"]`
-      );
-      let state = document.querySelector(
-        `[name="data[PII_OfcrDirTrust${trusteeIndex}State]"]`
-      );
-      let zip = document.querySelector(
-        `[name="data[PII_OfcrDirTrust${trusteeIndex}ZIP]"]`
-      );
-
-      if (firstName) firstName.value = trustee.FirstName;
-      if (lastName) lastName.value = trustee.LastName;
-      if (title) title.value = trustee.Title;
-      if (address) address.value = trustee.StreetAddr;
-      if (city) city.value = trustee.City;
-      if (state) state.value = trustee.State;
-      if (zip) zip.value = trustee.ZIP;
-      [firstName, lastName, title, address, city, state, zip].forEach(
-        (element) => {
-          if (element) {
-            element.dispatchEvent(new Event("input")); // Trigger input event
-            element.dispatchEvent(new Event("change")); // Trigger change event
-          }
-        }
-      );
+    observer.observe(document.body, {
+      childList: true,
+      subtree: true,
+      attributes: true,
     });
+    checkPageChanged(observer);
   }
-
-  // Observer function to detect when trustee section updates
-  function observeTrusteeChange() {
-    let container = document.querySelector("#formio"); // Adjust selector if needed
-
-    let observer = new MutationObserver(() => {
-      autofillTrustees(formData.Trustees);
-    });
-
-    observer.observe(container, { childList: true, subtree: true });
-
-    // Call autofillTrustees immediately after setting up the observer
-    autofillTrustees(formData.Trustees);
-  }
-
-  autofillForm(formData);
-  observeTrusteeChange();
+}
+function entryFormPage2(formData) {
+  const data = formData[1];
+  console.log("entryFormPage2", data);
 }
