@@ -77,7 +77,7 @@ async function entryFormPage1(formData) {
             // if the input element is a radio button or checkbox
           ) {
             let inputToClick = document.querySelector(
-              `[name*="data[${key}]"][id*="${value}"]`
+              `[name*="data[${key}]"][id*="--${value}"]`
             );
             if (inputToClick) {
               inputToClick.click();
