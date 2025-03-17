@@ -40,6 +40,139 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
         { key: "PII_OfcrDirTrust2State", value: "IL" },
         { key: "PII_OfcrDirTrust2ZIP", value: "60601" },
       ],
+      [
+        { key: "PII_OrgType", value: "Corporation" },
+        { key: "PII_IncorporatedDate", value: "04/11/2024" },
+        { key: "PII_IncorporatedState", value: "New York" },
+        { key: "Part2Item4", value: "1" },
+        { key: "Part2Item5", value: "1" },
+      ],
+      [
+        { key: "Part3Item1", value: "1" },
+        { key: "PII_Part3Item1Detail", value: "ppapw" },
+        { key: "Part3Item2", value: "1" },
+        { key: "PII_Part3Item2Detail", value: "odood" },
+      ],
+      [
+        {
+          key: "PII_Part4Item1",
+          value: `asdjhhwdkuahd jahdjhasdwkad hbasdkhwadjhbasudasdjhhwdkuahd jahdjhasdwkad hbasdkhwadjhbasudasdjhhwdkuahd jahdjhasdwkad hbasdkhwadjhbasudasdjhhwdkuahd jahdjhasdwkad hbasdkhwadjhbasudasdjhhwdkuahd jahdjhasdwkad hbasdkhwadjhbasud`,
+        },
+      ],
+      [
+        { key: "PII_NTEECode", value: "A01" },
+        { key: "AssignNTEE", value: "false" },
+        { key: "Part4Item3", value: "1" },
+        {
+          key: "PII_Part4Item3Description",
+          value: `asdjhhwdkuahd jahdjhasdwkad hbasdkhwadjhbasudasdjhhwdkuahd jahdjhasdwkad hbasdkhwadjhbasudasdjhhwdkuahd jahdjhasdwkad hbasdkhwadjhbasudasdjhhwdkuahd jahdjhasdwkad hbasdkhwadjhbasudasdjhhwdkuahd jahdjhasdwkad hbasdkhwadjhbasud`,
+        },
+        { key: "Part4Item4", value: "1" },
+        {
+          key: "PII_Part4Item4Description",
+          value: `asdjhhwdkuahd jahdjhasdwkad hbasdkhwadjhbasudasdjhhwdkuahd jahdjhasdwkad hbasdkhwadjhbasudasdjhhwdkuahd jahdjhasdwkad hbasdkhwadjhbasudasdjhhwdkuahd jahdjhasdwkad hbasdkhwadjhbasudasdjhhwdkuahd jahdjhasdwkad hbasdkhwadjhbasud`,
+        },
+        { key: "Part4Item5", value: "1" },
+        {
+          key: "PII_Part4Item5Description",
+          value: `asdjhhwdkuahd jahdjhasdwkad hbasdkhwadjhbasudasdjhhwdkuahd jahdjhasdwkad hbasdkhwadjhbasudasdjhhwdkuahd jahdjhasdwkad hbasdkhwadjhbasudasdjhhwdkuahd jahdjhasdwkad hbasdkhwadjhbasudasdjhhwdkuahd jahdjhasdwkad hbasdkhwadjhbasud`,
+        },
+        { key: "Part4Item6", value: "1" },
+        {
+          key: "PII_Part4Item6Description",
+          value: `asdjhhwdkuahd jahdjhasdwkad hbasdkhwadjhbasudasdjhhwdkuahd jahdjhasdwkad hbasdkhwadjhbasudasdjhhwdkuahd jahdjhasdwkad hbasdkhwadjhbasudasdjhhwdkuahd jahdjhasdwkad hbasdkhwadjhbasudasdjhhwdkuahd jahdjhasdwkad hbasdkhwadjhbasud`,
+        },
+        { key: "Part4Item6a", value: "1" },
+        { key: "Part4Item7", value: "1" },
+        {
+          key: "PII_Part4Item7Description",
+          value: `asdjhhwdkuahd jahdjhasdwkad hbasdkhwadjhbasudasdjhhwdkuahd jahdjhasdwkad hbasdkhwadjhbasudasdjhhwdkuahd jahdjhasdwkad hbasdkhwadjhbasudasdjhhwdkuahd jahdjhasdwkad hbasdkhwadjhbasudasdjhhwdkuahd jahdjhasdwkad hbasdkhwadjhbasud`,
+        },
+        { key: "Part4Item8", value: "1" },
+        {
+          key: "PII_Part4Item8Description",
+          value: `asdjhhwdkuahd jahdjhasdwkad hbasdkhwadjhbasudasdjhhwdkuahd jahdjhasdwkad hbasdkhwadjhbasudasdjhhwdkuahd jahdjhasdwkad hbasdkhwadjhbasudasdjhhwdkuahd jahdjhasdwkad hbasdkhwadjhbasudasdjhhwdkuahd jahdjhasdwkad hbasdkhwadjhbasud`,
+        },
+        { key: "Part4Item9", value: "1" },
+        {
+          key: "PII_Part4Item9Description",
+          value: `asdjhhwdkuahd jahdjhasdwkad hbasdkhwadjhbasudasdjhhwdkuahd jahdjhasdwkad hbasdkhwadjhbasudasdjhhwdkuahd jahdjhasdwkad hbasdkhwadjhbasudasdjhhwdkuahd jahdjhasdwkad hbasdkhwadjhbasudasdjhhwdkuahd jahdjhasdwkad hbasdkhwadjhbasud`,
+        },
+        { key: "Part4Item9a", value: "1" },
+        {
+          key: "PII_Part4Item9aDescription",
+          value: `asdjhhwdkuahd jahdjhasdwkad hbasdkhwadjhbasudasdjhhwdkuahd jahdjhasdwkad hbasdkhwadjhbasudasdjhhwdkuahd jahdjhasdwkad hbasdkhwadjhbasudasdjhhwdkuahd jahdjhasdwkad hbasdkhwadjhbasudasdjhhwdkuahd jahdjhasdwkad hbasdkhwadjhbasud`,
+        },
+        { key: "Part4Item9b", value: "1" },
+        {
+          key: "PII_Part4Item9bDescription",
+          value: `asdjhhwdkuahd jahdjhasdwkad hbasdkhwadjhbasudasdjhhwdkuahd jahdjhasdwkad hbasdkhwadjhbasudasdjhhwdkuahd jahdjhasdwkad hbasdkhwadjhbasudasdjhhwdkuahd jahdjhasdwkad hbasdkhwadjhbasudasdjhhwdkuahd jahdjhasdwkad hbasdkhwadjhbasud`,
+        },
+        { key: "Part4Item9c", value: "1" },
+        {
+          key: "PII_Part4Item9cDescription",
+          value: `asdjhhwdkuahd jahdjhasdwkad hbasdkhwadjhbasudasdjhhwdkuahd jahdjhasdwkad hbasdkhwadjhbasudasdjhhwdkuahd jahdjhasdwkad hbasdkhwadjhbasudasdjhhwdkuahd jahdjhasdwkad hbasdkhwadjhbasudasdjhhwdkuahd jahdjhasdwkad hbasdkhwadjhbasud`,
+        },
+        { key: "Part4Item9d", value: "1" },
+        {
+          key: "PII_Part4Item9dDescription",
+          value: `asdjhhwdkuahd jahdjhasdwkad hbasdkhwadjhbasudasdjhhwdkuahd jahdjhasdwkad hbasdkhwadjhbasudasdjhhwdkuahd jahdjhasdwkad hbasdkhwadjhbasudasdjhhwdkuahd jahdjhasdwkad hbasdkhwadjhbasudasdjhhwdkuahd jahdjhasdwkad hbasdkhwadjhbasud`,
+        },
+        { key: "Part4Item9e", value: "1" },
+        {
+          key: "PII_Part4Item9eDescription",
+          value: `asdjhhwdkuahd jahdjhasdwkad hbasdkhwadjhbasudasdjhhwdkuahd jahdjhasdwkad hbasdkhwadjhbasudasdjhhwdkuahd jahdjhasdwkad hbasdkhwadjhbasudasdjhhwdkuahd jahdjhasdwkad hbasdkhwadjhbasudasdjhhwdkuahd jahdjhasdwkad hbasdkhwadjhbasud`,
+        },
+        { key: "Part4Item9f", value: "1" },
+        {
+          key: "PII_Part4Item9fDescription",
+          value: `asdjhhwdkuahd jahdjhasdwkad hbasdkhwadjhbasudasdjhhwdkuahd jahdjhasdwkad hbasdkhwadjhbasudasdjhhwdkuahd jahdjhasdwkad hbasdkhwadjhbasudasdjhhwdkuahd jahdjhasdwkad hbasdkhwadjhbasudasdjhhwdkuahd jahdjhasdwkad hbasdkhwadjhbasud`,
+        },
+        { key: "Part4Item9g", value: "1" },
+        {
+          key: "PII_Part4Item9gDescription",
+          value: `asdjhhwdkuahd jahdjhasdwkad hbasdkhwadjhbasudasdjhhwdkuahd jahdjhasdwkad hbasdkhwadjhbasudasdjhhwdkuahd jahdjhasdwkad hbasdkhwadjhbasudasdjhhwdkuahd jahdjhasdwkad hbasdkhwadjhbasudasdjhhwdkuahd jahdjhasdwkad hbasdkhwadjhbasud`,
+        },
+        { key: "Part4Item9h", value: "1" },
+        { key: "Part4Item9i", value: "1" },
+        { key: "Part4Item10", value: "1" },
+        {
+          key: "PII_Part4Item10Description",
+          value: `asdjhhwdkuahd jahdjhasdwkad hbasdkhwadjhbasudasdjhhwdkuahd jahdjhasdwkad hbasdkhwadjhbasudasdjhhwdkuahd jahdjhasdwkad hbasdkhwadjhbasudasdjhhwdkuahd jahdjhasdwkad hbasdkhwadjhbasudasdjhhwdkuahd jahdjhasdwkad hbasdkhwadjhbasud`,
+        },
+        { key: "Part4Item10a", value: "1" },
+        {
+          key: "PII_Part4Item10aDescription",
+          value: `asdjhhwdkuahd jahdjhasdwkad hbasdkhwadjhbasudasdjhhwdkuahd jahdjhasdwkad hbasdkhwadjhbasudasdjhhwdkuahd jahdjhasdwkad hbasdkhwadjhbasudasdjhhwdkuahd jahdjhasdwkad hbasdkhwadjhbasudasdjhhwdkuahd jahdjhasdwkad hbasdkhwadjhbasud`,
+        },
+        { key: "Part4Item10b", value: "1" },
+        { key: "Part4Item10c", value: "1" },
+        { key: "Part4Item11", value: "1" },
+        {
+          key: "PII_Part4Item11Description",
+          value: `asdjhhwdkuahd jahdjhasdwkad hbasdkhwadjhbasudasdjhhwdkuahd jahdjhasdwkad hbasdkhwadjhbasudasdjhhwdkuahd jahdjhasdwkad hbasdkhwadjhbasudasdjhhwdkuahd jahdjhasdwkad hbasdkhwadjhbasudasdjhhwdkuahd jahdjhasdwkad hbasdkhwadjhbasud`,
+        },
+        { key: "Part4Item12", value: "1" },
+        { key: "Part4Item13", value: "1" },
+        { key: "Part4Item14", value: "1" },
+        { key: "Part4Item15", value: "1" },
+        { key: "Part4Item16Website", value: "1" },
+        { key: "Part4Item16FoundationGrant", value: "1" },
+        { key: "Part4Item16OtherOrg", value: "1" },
+        { key: "Part4Item16Bingo", value: "1" },
+        { key: "Part4Item16OtherGame", value: "1" },
+        { key: "Part4Item16Other", value: "1" },
+        {
+          key: "Part4Item16OtherDescription",
+          value: `asdjhhwdkuahd jahdjhasdwkad hbasdkhwadjhbasudasdjhhwdkuahd jahdjhasdwkad hbasdkhwadjhbasudasdjhhwdkuahd jahdjhasdwkad hbasdkhwadjhbasudasdjhhwdkuahd`,
+        },
+        { key: "NoFundraising", value: "0" },
+        { key: "Part4Item17", value: "1" },
+        {
+          key: "PII_Part4Item17Description",
+          value: `asdjhhwdkuahd jahdjhasdwkad hbasdkhwadjhbasudasdjhhwdkuahd jahdjhasdwkad hbasdkhwadjhbasudasdjhhwdkuahd jahdjhasdwkad hbasdkhwadjhbasudasdjhhwdkuahd jahdjhasdwkad hbasdkhwadjhbasudasdjhhwdkuahd jahdjhasdwkad hbasdkhwadjhbasud`,
+        },
+      ],
     ];
     switch (stage) {
       case "start":
@@ -50,47 +183,7 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
           ".usa-step-indicator__current-step"
         );
         if (pageSpan) {
-          let pageNumber = Number(pageSpan.textContent.trim());
-          switch (pageNumber) {
-            case 1:
-              entryFormPage1(data);
-              break;
-            case 2:
-              entryFormPage2(data);
-              break;
-            case 3:
-              entryFormPage3(data);
-              break;
-            case 4:
-              entryFormPage4(data);
-              break;
-            case 5:
-              entryFormPage5(data);
-              break;
-            case 6:
-              entryFormPage6(data);
-              break;
-            case 7:
-              entryFormPage7(data);
-              break;
-            case 8:
-              entryFormPage8(data);
-              break;
-            case 9:
-              entryFormPage9(data);
-              break;
-            case 10:
-              entryFormPage10(data);
-              break;
-            case 11:
-              entryFormPage11(data);
-              break;
-            case 12:
-              entryFormPage12(data);
-              break;
-            default:
-              break;
-          }
+          entryFormPage(data);
         }
       default:
         break;

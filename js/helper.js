@@ -1,3 +1,8 @@
+class ErrorWithoutObserver extends Error {
+  constructor(message, options) {
+    super(message, options);
+  }
+}
 function startFormPage() {
   let continueButton = document.querySelector("#continueButton");
 
@@ -6,7 +11,7 @@ function startFormPage() {
   }
 }
 
-async function entryFormPage1(formData) {
+async function entryFormPage(formData) {
   // Function to autofill form fields using the name attribute
   function fillField(key, value) {
     return new Promise((resolve, reject) => {
@@ -15,43 +20,60 @@ async function entryFormPage1(formData) {
       try {
         eventDispatch(); // Trigger change event
       } catch (error) {
-        const observer = new MutationObserver((mutationsList, observer) => {
-          for (let mutation of mutationsList) {
-            if (
-              mutation.type === "childList" ||
-              mutation.type === "attributes"
-            ) {
-              try {
-                eventDispatch();
-                observer.disconnect();
-              } catch (error) {}
-              break;
+        if (error instanceof ErrorWithoutObserver) {
+          console.log("Couldn't find input element for key: " + key);
+          // Reject the promise after a timeout
+          resolve(false);
+        } else {
+          const observer = new MutationObserver((mutationsList, observer) => {
+            for (let mutation of mutationsList) {
+              if (
+                mutation.type === "childList" ||
+                mutation.type === "attributes"
+              ) {
+                try {
+                  eventDispatch();
+                  observer.disconnect();
+                } catch (error) {}
+                break;
+              }
             }
-          }
-        });
+          });
 
-        observer.observe(document.body, {
-          childList: true,
-          subtree: true,
-          attributes: true,
-        });
-        // trigger in case it was missed by the observer
-        try {
-          eventDispatch();
-        } catch (error) {}
-        setTimeoutForErrorHandling = setTimeout(() => {
+          observer.observe(document.body, {
+            childList: true,
+            subtree: true,
+            attributes: true,
+          });
+          // trigger in case it was missed by the observer
           try {
             eventDispatch();
-          } catch (error) {
-            observer.disconnect();
-            console.log("Couldn't find input element for key: " + key);
-            // Reject the promise after a timeout
-            resolve(false);
-          }
-        }, 5000); // Stop observing after 5 seconds
+          } catch (error) {}
+          setTimeoutForErrorHandling = setTimeout(() => {
+            try {
+              eventDispatch();
+            } catch (error) {
+              observer.disconnect();
+              console.log("Couldn't find input element for key: " + key);
+              // Reject the promise after a timeout
+              resolve(false);
+            }
+          }, 5000); // Stop observing after 5 seconds
+        }
       }
 
       function eventDispatch() {
+        function setValue(inputElement, value) {
+          if (inputElement) {
+            if (inputElement.type == "checkbox") {
+              inputElement.checked = value == "true" ? true : false;
+            } else {
+              inputElement.value = value;
+            }
+            inputElement.dispatchEvent(new Event("change"));
+            inputElement.dispatchEvent(new Event("input")); // Trigger change event
+          }
+        }
         inputElement = document.querySelector(`[name*="data[${key}]"]`);
         if (inputElement) {
           clearTimeout(setTimeoutForErrorHandling);
@@ -64,16 +86,16 @@ async function entryFormPage1(formData) {
             let inputToChange =
               inputGroupElement.querySelector("input:not([name])");
             if (inputToChange) {
-              inputToChange.value = value;
-              inputToChange.dispatchEvent(new Event("input")); // Trigger change event
-              inputToChange.dispatchEvent(new Event("change"));
+              setValue(inputElement, value);
+              setValue(inputToChange, value);
+              inputToChange.click();
             } else {
               throw new Error(
                 "Input element 'input group' not found for key: " + key
               );
             }
           } else if (
-            inputElement == document.querySelector(`[name*="data[${key}]"][`)
+            inputElement == document.querySelector(`[name*="data[${key}]["]`)
             // if the input element is a radio button or checkbox
           ) {
             let inputToClick = document.querySelector(
@@ -82,15 +104,13 @@ async function entryFormPage1(formData) {
             if (inputToClick) {
               inputToClick.click();
             } else {
-              throw new Error(
+              throw new ErrorWithoutObserver(
                 "Input element 'value' not found for key: " + key
               );
             }
           } else {
             // if the input element is a text field or select
-            inputElement.value = value;
-            inputElement.dispatchEvent(new Event("input")); // Trigger change event
-            inputElement.dispatchEvent(new Event("change"));
+            setValue(inputElement, value);
             if (
               inputElement.value != value &&
               inputElement.tagName === "SELECT"
@@ -131,9 +151,7 @@ async function entryFormPage1(formData) {
                   observerOptions.disconnect();
                 }, 5000); // Stop observing after 5 seconds
               } else {
-                inputElement.value = value;
-                inputElement.dispatchEvent(new Event("input"));
-                inputElement.dispatchEvent(new Event("change"));
+                setValue(inputElement, value);
               }
             }
           }
@@ -144,7 +162,14 @@ async function entryFormPage1(formData) {
       }
     });
   }
-  const data = formData[0];
+  let pageSpan = document.querySelector(".usa-step-indicator__current-step");
+  let currentPageNumber = Number(pageSpan.textContent.trim());
+
+  const data = formData[currentPageNumber - 1];
+  if (!data) {
+    return console.log("No data found for form autofill");
+  }
+  let proceededToNextPage = false;
   let itemsAutoFilled = [];
   for (let i = 0; i < data.length; i++) {
     const item = data[i];
@@ -155,7 +180,7 @@ async function entryFormPage1(formData) {
     itemsAutoFilled.length == data.length &&
     itemsAutoFilled.indexOf(false) == -1
   ) {
-    let continueButton = document.querySelector("[name='data[next1]']");
+    let continueButton = document.querySelector("[name*='data[next']");
     if (continueButton) {
       continueButton.click();
     }
@@ -165,9 +190,13 @@ async function entryFormPage1(formData) {
       );
       if (pageSpan) {
         let pageNumber = Number(pageSpan.textContent.trim());
-        if (pageNumber === 2) {
+        if (
+          pageNumber === currentPageNumber + 1 &&
+          proceededToNextPage === false
+        ) {
+          proceededToNextPage = true;
           observer.disconnect();
-          entryFormPage2(data);
+          entryFormPage(formData);
         }
       }
     }
@@ -186,8 +215,4 @@ async function entryFormPage1(formData) {
     });
     checkPageChanged(observer);
   }
-}
-function entryFormPage2(formData) {
-  const data = formData[1];
-  console.log("entryFormPage2", data);
 }
