@@ -1,7 +1,9 @@
 // form link: https://www.pay.gov/public/form/start/704509645
-
+let dealId;
+let formId;
+chrome.runtime.sendMessage({ action: "ready" });
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
-  if (request.action === "startAutoFill") {
+  if (request.action === "startAutoFill" && dealId) {
     const formLink = window.location.href;
     let formLinkData = formLink.split("/").filter((e) => e != "");
     formLinkData.reverse();
@@ -188,5 +190,9 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
       default:
         break;
     }
+  } else if (request.action === "data") {
+    dealId = request.payload.dealId;
+    formId = request.payload.formId;
   }
+  return true; // Keep the message channel open for async responses
 });

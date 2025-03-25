@@ -169,7 +169,7 @@ async function entryFormPage(formData) {
   if (!data) {
     return console.log("No data found for form autofill");
   }
-  let proceededToNextPage = false;
+  // let proceededToNextPage = false;
   let itemsAutoFilled = [];
   for (let i = 0; i < data.length; i++) {
     const item = data[i];
@@ -180,39 +180,62 @@ async function entryFormPage(formData) {
     itemsAutoFilled.length == data.length &&
     itemsAutoFilled.indexOf(false) == -1
   ) {
-    let continueButton = document.querySelector("[name*='data[next']");
-    if (continueButton) {
-      continueButton.click();
-    }
-    function checkPageChanged(observer) {
-      let pageSpan = document.querySelector(
-        ".usa-step-indicator__current-step"
-      );
-      if (pageSpan) {
-        let pageNumber = Number(pageSpan.textContent.trim());
-        if (
-          pageNumber === currentPageNumber + 1 &&
-          proceededToNextPage === false
-        ) {
-          proceededToNextPage = true;
-          observer.disconnect();
-          entryFormPage(formData);
-        }
-      }
-    }
-    const observer = new MutationObserver((mutationsList, observer) => {
-      for (let mutation of mutationsList) {
-        if (mutation.type === "childList" || mutation.type === "attributes") {
-          checkPageChanged(observer);
-        }
-      }
-    });
+    alert("Form autofill completed. Click continue to proceed.");
+    // let continueButton = document.querySelector("[name*='data[next']");
+    // if (continueButton) {
+    //   continueButton.click();
+    // }
+    // function checkPageChanged(observer) {
+    //   let pageSpan = document.querySelector(
+    //     ".usa-step-indicator__current-step"
+    //   );
+    //   if (pageSpan) {
+    //     let pageNumber = Number(pageSpan.textContent.trim());
+    //     if (
+    //       pageNumber === currentPageNumber + 1 &&
+    //       proceededToNextPage === false
+    //     ) {
+    //       proceededToNextPage = true;
+    //       observer.disconnect();
+    //       entryFormPage(formData);
+    //     }
+    //   }
+    // }
+    // const observer = new MutationObserver((mutationsList, observer) => {
+    //   for (let mutation of mutationsList) {
+    //     if (mutation.type === "childList" || mutation.type === "attributes") {
+    //       checkPageChanged(observer);
+    //     }
+    //   }
+    // });
 
-    observer.observe(document.body, {
-      childList: true,
-      subtree: true,
-      attributes: true,
-    });
-    checkPageChanged(observer);
+    // observer.observe(document.body, {
+    //   childList: true,
+    //   subtree: true,
+    //   attributes: true,
+    // });
+    // checkPageChanged(observer);
   }
+}
+
+function extractKeysWithCondition(obj, keys = []) {
+  if (Array.isArray(obj)) {
+    obj.forEach((item) => extractKeysWithCondition(item, keys));
+  } else if (typeof obj === "object" && obj !== null) {
+    if (
+      "key" in obj &&
+      obj.key.indexOf("html") != 0 &&
+      obj.key.indexOf("columns") != 0 &&
+      obj.input === true &&
+      obj.type != "hidden" &&
+      obj.type != "button" &&
+      obj.type != "datasource"
+    ) {
+      keys.push({ key: obj.key, question: obj.label });
+    }
+    Object.values(obj).forEach((value) =>
+      extractKeysWithCondition(value, keys)
+    );
+  }
+  return keys;
 }

@@ -3,11 +3,17 @@
   "name": "BFLX",
   "version": "1.0",
   "description": "Autofill your goverment documents with BFLX",
-  "permissions": [],
+  "permissions": [
+    "storage",
+    "scripting",
+    "activeTab",
+    "tabs"
+  ],
   "background": {
     "service_worker": "./js/bg.js"
   },
   "action": {
+    "default_popup": "popup.html",
     "default_title": "BFLX",
     "default_icon": {
       "16": "assets/icon.png",
@@ -27,7 +33,16 @@
       ],
       "js": [
         "./js/helper.js",
-        "./js/cs.js"
+        "./js/csPayGov.js"
+      ]
+    },
+    {
+      "matches": [
+        "*://bluefieldlaw.pipedrive.com/*"
+      ],
+      "js": [
+        "./js/helper.js",
+        "./js/csBFL.js"
       ]
     }
   ]
