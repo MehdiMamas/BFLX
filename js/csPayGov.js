@@ -1,14 +1,11 @@
 // form link: https://www.pay.gov/public/form/start/704509645
-let dealId;
-let formId;
+let dealId = "3531";
+let formId = "PV24";
 chrome.runtime.sendMessage({ action: "ready" });
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
   if (request.action === "startAutoFill" && dealId) {
     const formLink = window.location.href;
     let formLinkData = formLink.split("/").filter((e) => e != "");
-    formLinkData.reverse();
-    const formId = formLinkData[0];
-    formLinkData.reverse();
     const stage = formLinkData[4];
     const data = [
       [
@@ -185,7 +182,7 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
           ".usa-step-indicator__current-step"
         );
         if (pageSpan) {
-          entryFormPage(data);
+          entryFormPage(dealId, formId);
         }
       default:
         break;
