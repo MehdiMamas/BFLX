@@ -30,7 +30,21 @@ function getDataFromWebhook(dealId, formId, fields) {
     );
   });
 }
+let finishedAutoFill = false;
 let setOfFilledIds = new Set();
+const observerAfterAutoFill = new MutationObserver(handleAutoFillMutation);
+observerAfterAutoFill.observe(document.body, {
+  childList: true,
+  subtree: true,
+  attributes: true,
+});
+function handleAutoFillMutation(mutationsList, observer) {
+  if (finishedAutoFill == true) {
+    console.log("DOM changed after autofill. Retrying...");
+    finishedAutoFill = false;
+    entryFormPage(dealId, formId);
+  }
+}
 function getAllFieldsIds() {
   return Array.from(document.querySelectorAll("[name*='data[']"))
     .filter((e) => e.type != "button")
@@ -38,23 +52,23 @@ function getAllFieldsIds() {
     .map((e) => e.getAttribute("name").split("[")[1].split("]")[0]);
 }
 async function entryFormPage(dealId, formId) {
-  let finishedAutoFill = false;
   // Observer to monitor DOM changes
-  const observer = new MutationObserver((mutationsList, observer) => {
-    if (finishedAutoFill == true) {
-      console.log("DOM changed after autofill. Retrying...");
-      entryFormPage(dealId, formId);
-      observer.disconnect(); // Stop observing after autofill is complete
+
+  function checkIfObserverMissed(fieldsToFill) {
+    let fieldsToFillAfter = getAllFieldsIds().filter(
+      (e) => !setOfFilledIds.has(e)
+    );
+    if (fieldsToFillAfter.filter((e) => !fieldsToFill.find(e)).length > 0) {
+      handleAutoFillMutation([], observerAfterAutoFill);
     }
-  });
-
-  observer.observe(document.body, {
-    childList: true,
-    subtree: true,
-    attributes: true,
-  });
-
+  }
   let fieldsToFill = getAllFieldsIds().filter((e) => !setOfFilledIds.has(e));
+  if (fieldsToFill.length == 0) {
+    console.log("No fields to fill");
+    finishedAutoFill = true;
+    checkIfObserverMissed(fieldsToFill);
+    return;
+  }
   let formData = await getDataFromWebhook(dealId, formId, fieldsToFill);
   console.log(formData);
   // Function to autofill form fields using the name attribute
@@ -208,17 +222,19 @@ async function entryFormPage(dealId, formId) {
       }
     });
   }
-  let pageSpan = document.querySelector(".usa-step-indicator__current-step");
-
   const data = Object.keys(formData)
     .filter((e) => e != "deal_id" && e != "form-id")
     .map((key) => {
       return { key: key, value: formData[key] };
     })
     .filter((e) => fieldsToFill.indexOf(e.key) != -1); // filter out fields that are not in the form
-  if (!data) {
-    observer.disconnect(); // Stop observing if no data
-    return console.log("No data found for form autofill");
+  if (data.length == 0) {
+    finishedAutoFill = true;
+    console.log(
+      "fields missing data: ",
+      fieldsToFill.filter((e) => data.find((f) => f.key == e) == undefined)
+    );
+    return;
   }
   // let proceededToNextPage = false;
   let itemsAutoFilled = [];
@@ -228,51 +244,7 @@ async function entryFormPage(dealId, formId) {
     itemsAutoFilled.push(await fillField(key, value));
   }
   finishedAutoFill = true;
-  if (
-    itemsAutoFilled.length == data.length &&
-    itemsAutoFilled.indexOf(false) == -1
-  ) {
-    // alert("Form autofill completed. Click continue to proceed.");
-    // let continueButton = document.querySelector("[name*='data[next']");
-    // if (continueButton) {
-    //   continueButton.click();
-    // }
-    // function checkPageChanged(observer) {
-    //   let pageSpan = document.querySelector(
-    //     ".usa-step-indicator__current-step"
-    //   );
-    //   if (pageSpan) {
-    //     let pageNumber = Number(pageSpan.textContent.trim());
-    //     if (
-    //       pageNumber === currentPageNumber + 1 &&
-    //       proceededToNextPage === false
-    //     ) {
-    //       proceededToNextPage = true;
-    //       observer.disconnect();
-    //       entryFormPage(formData);
-    //     }
-    //   }
-    // }
-    // const observer = new MutationObserver((mutationsList, observer) => {
-    //   for (let mutation of mutationsList) {
-    //     if (mutation.type === "childList" || mutation.type === "attributes") {
-    //       checkPageChanged(observer);
-    //     }
-    //   }
-    // });
-    // observer.observe(document.body, {
-    //   childList: true,
-    //   subtree: true,
-    //   attributes: true,
-    // });
-    // checkPageChanged(observer);
-  }
-
-  setTimeout(() => {
-    if (observer && observer.disconnect) {
-      observer.disconnect();
-    }
-  }, 5000);
+  checkIfObserverMissed(fieldsToFill);
 }
 
 function extractKeysWithCondition(obj, keys = []) {
