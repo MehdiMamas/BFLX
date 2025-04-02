@@ -46,10 +46,16 @@ function handleAutoFillMutation(mutationsList, observer) {
   }
 }
 function getAllFieldsIds() {
-  return Array.from(document.querySelectorAll("[name*='data[']"))
-    .filter((e) => e.type != "button")
-    .filter((e) => e.type != "hidden")
-    .map((e) => e.getAttribute("name").split("[")[1].split("]")[0]);
+  return Array.from(
+    new Set(
+      Array.from(document.querySelectorAll("[name*='data[']"))
+        .filter((e) => e.type != "button")
+        .filter(
+          (e) => e.type != "hidden" || e.getAttribute("area-required") != "true"
+        )
+        .map((e) => e.getAttribute("name").split("[")[1].split("]")[0])
+    )
+  );
 }
 async function entryFormPage(dealId, formId) {
   // Observer to monitor DOM changes
