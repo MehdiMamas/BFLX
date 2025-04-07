@@ -64,7 +64,10 @@ async function entryFormPage(dealId, formId) {
     let fieldsToFillAfter = getAllFieldsIds().filter(
       (e) => !setOfFilledIds.has(e)
     );
-    if (fieldsToFillAfter.filter((e) => !fieldsToFill.find(e)).length > 0) {
+    if (
+      fieldsToFillAfter.filter((e) => !fieldsToFill.find((el) => el == e))
+        .length > 0
+    ) {
       handleAutoFillMutation([], observerAfterAutoFill);
     }
   }
@@ -75,7 +78,17 @@ async function entryFormPage(dealId, formId) {
     checkIfObserverMissed(fieldsToFill);
     return;
   }
+  let fieldsToAddToSetOfFilledIds = [];
+  fieldsToFill.forEach((field) => {
+    setOfFilledIds.add(field);
+    fieldsToAddToSetOfFilledIds.push(field);
+  });
   let formData = await getDataFromWebhook(dealId, formId, fieldsToFill);
+  fieldsToAddToSetOfFilledIds.forEach((field) => {
+    if (Object.keys(formData).indexOf(field) == -1) {
+      setOfFilledIds.delete(field);
+    }
+  });
   console.log(formData);
   // Function to autofill form fields using the name attribute
   function fillField(key, value) {
@@ -89,6 +102,7 @@ async function entryFormPage(dealId, formId) {
           console.log("Couldn't find input element for key: " + key);
           // Reject the promise after a timeout
           resolve(false);
+          setOfFilledIds.delete(key); // remove from the set of filled ids to retry later
         } else {
           const observer = new MutationObserver((mutationsList, observer) => {
             for (let mutation of mutationsList) {
@@ -122,6 +136,7 @@ async function entryFormPage(dealId, formId) {
               console.log("Couldn't find input element for key: " + key);
               // Reject the promise after a timeout
               resolve(false);
+              setOfFilledIds.delete(key);
             }
           }, 5000); // Stop observing after 5 seconds
         }
