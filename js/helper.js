@@ -59,7 +59,11 @@ function getAllFieldsIds() {
 }
 async function entryFormPage(dealId, formId) {
   // Observer to monitor DOM changes
-
+  let pageSpan = document.querySelector(".usa-step-indicator__current-step");
+  let currentPageNumber = Number(pageSpan.textContent.trim());
+  if (currentPageNumber != pageNumber) {
+    return;
+  }
   function checkIfObserverMissed(fieldsToFill) {
     let fieldsToFillAfter = getAllFieldsIds().filter(
       (e) => !setOfFilledIds.has(e)

@@ -47,6 +47,8 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.action === "openNewTab") {
     openNewTab(message.formUrl, message);
     sendResponse({ status: "success" });
+  } else if (message.action == "autofill") {
+    chrome.tabs.sendMessage(sender.tab.id, { action: "startAutoFill" });
   } else if (message.action === "getDataFromWebhook") {
     try {
       getDataFromWebhook(message.dealId, message.formId, message.fields).then(

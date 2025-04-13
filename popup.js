@@ -1,3 +1,13 @@
+chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+  const activeTab = tabs[0];
+  const url = activeTab.url;
+
+  const allowedHost = "https://bluefieldlaw.pipedrive.com"; // replace with your domain
+
+  if (!url.includes(allowedHost)) {
+    window.close(); // attempts to close the popup
+  }
+});
 document.addEventListener("DOMContentLoaded", () => {
   const rows = document.querySelectorAll("tr[id]");
   rows.forEach((row) => {

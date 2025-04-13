@@ -12,7 +12,9 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
       console.log("Deal ID:", dealId);
       // You can add further processing logic for the deal ID here
-
+      chrome.storage.local.set({
+        dealId: dealId,
+      });
       sendResponse({ success: true, dealId });
     } catch (error) {
       console.error("Error extracting deal ID:", error);

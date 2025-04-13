@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "BFLX",
-  "version": "1.1.4",
+  "version": "1.1.5",
   "description": "Autofill your goverment documents with BFLX",
   "permissions": [
     "storage",
@@ -27,6 +27,14 @@
     "128": "assets/icon.png"
   },
   "content_scripts": [
+    {
+      "matches": [
+        "*://*.pay.gov/*/form/*"
+      ],
+      "js": [
+        "./js/autofillbtn.js"
+      ]
+    },
     {
       "matches": [
         "*://*.pay.gov/*/form/*"

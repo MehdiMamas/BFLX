@@ -7,7 +7,7 @@
   <title>Document Links</title>
   <style>
     body {
-      margin: 30px;
+      margin: 0px;
     }
 
     table {
@@ -33,11 +33,11 @@
 
     /* Add alternating row colors */
     tbody tr:nth-child(odd) {
-      background-color: #D1D7DB;
+      background-color: #D2E5F7;
     }
 
     tbody tr:nth-child(even) {
-      background-color: #E7EBF0;
+      background-color: #FFFFFF;
     }
 
     tbody tr:hover {
@@ -48,17 +48,6 @@
       filter: brightness(0.7)
     }
 
-    .logo {
-      position: absolute;
-      top: -20px;
-      left: 50%;
-      transform: translateX(-50%);
-      max-width: 60px;
-    }
-
-    .table-container {
-      position: relative;
-    }
 
     .button {
       position: fixed;
@@ -88,14 +77,8 @@
 </head>
 
 <body>
-  <div class="table-container" style="width:500px">
-    <img src="logo.png" alt="Logo" class="logo">
+  <div class="table-container" style="width: 190px;height: 300px;overflow: auto;">
     <table>
-      <thead>
-        <tr style="background-color: #0D6690;">
-          <th>Form</th>
-        </tr>
-      </thead>
       <tbody>
         <tr id="row-pv23" data-formurl="https://www.pay.gov/public/form/start/704509645" data-formid="PV23">
           <td>Pay.gov 1023</td>
@@ -168,7 +151,7 @@
       </tbody>
     </table>
   </div>
-  <button id="autofill" class="button">Start AutoFill</button>
+  <button id="autofill" class="button" style="display: none;">Start AutoFill</button>
   <script src="popup.js"></script>
 </body>
 
