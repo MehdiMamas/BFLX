@@ -248,7 +248,7 @@ async function entryFormPage(dealId, formId) {
     });
   }
   const data = Object.keys(formData)
-    .filter((e) => e != "deal_id" && e != "form-id")
+    .filter((e) => e != "deal_id" && e != "form_id")
     .map((key) => {
       return { key: key, value: formData[key] };
     })
